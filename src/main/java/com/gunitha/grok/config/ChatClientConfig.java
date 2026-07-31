@@ -1,6 +1,7 @@
 package com.gunitha.grok.config;
 
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.context.annotation.Bean;
@@ -23,4 +24,12 @@ public class ChatClientConfig {
                 .defaultUser("How can you help me?");
         return builder.build();
     }
+
+    @Bean
+    public ChatClient grokAdvisorChatClient(OpenAiChatModel openAiChatModel) {
+        return ChatClient.builder(openAiChatModel)
+                .defaultAdvisors(new SimpleLoggerAdvisor())
+                .build();
+    }
+
 }

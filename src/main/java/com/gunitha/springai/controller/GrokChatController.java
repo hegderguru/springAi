@@ -1,4 +1,4 @@
-package com.gunitha.grok.controller;
+package com.gunitha.springai.controller;
 
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Autowired;

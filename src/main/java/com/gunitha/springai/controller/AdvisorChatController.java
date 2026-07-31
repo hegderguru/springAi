@@ -1,5 +1,6 @@
-package com.gunitha.grok.controller;
+package com.gunitha.springai.controller;
 
+import com.gunitha.springai.advisor.TokenUsageAuditAdvisor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.template.st.StTemplateRenderer;
@@ -39,6 +40,7 @@ public class AdvisorChatController {
     @GetMapping("chat")
     public String promptStuffing(String message) {
         return grokAdvisorChatClient.prompt()
+                .advisors(new TokenUsageAuditAdvisor())
                 .system(springVersionPromptTemplate)
                 .user(promptTemplate.render(Map.of("message", message)))
                 .call().content();

@@ -1,4 +1,4 @@
-package com.gunitha.grok.config;
+package com.gunitha.springai.config;
 
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;

@@ -1,4 +1,4 @@
-package com.gunitha.grok;
+package com.gunitha.springai;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

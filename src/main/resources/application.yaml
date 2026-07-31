@@ -23,7 +23,7 @@ spring:
         temperature: 0.7 # Controls response creativity
         top-p: 0.9 #
 
-
 logging:
   level:
     root: INFO
+    org.springframework.ai.chat.client.advisor: DEBUG

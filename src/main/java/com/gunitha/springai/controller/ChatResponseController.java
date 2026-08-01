@@ -6,6 +6,7 @@ import org.springframework.ai.converter.BeanOutputConverter;
 import org.springframework.ai.converter.ListOutputConverter;
 import org.springframework.ai.converter.MapOutputConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,6 +65,16 @@ public class ChatResponseController {
                 .advisors(new SimpleLoggerAdvisor())
                 .system("You are AI assistant. You answer questions related to Spring boot Java implementation")
                 .call().entity(new BeanOutputConverter<>(SpringDetail.class));
+        return ResponseEntity.ok(entity);
+    }
+
+    @GetMapping("chat-structured-pojo-list")
+    public ResponseEntity<List<SpringDetail>> responseStructuredListBean(String message) {
+        List<SpringDetail> entity = chatClient.prompt(message)
+                .advisors(new SimpleLoggerAdvisor())
+                .system("You are AI assistant. You answer questions related to Spring boot Java implementation")
+                .call().entity(new ParameterizedTypeReference<List<SpringDetail>>() {
+                });
         return ResponseEntity.ok(entity);
     }
 

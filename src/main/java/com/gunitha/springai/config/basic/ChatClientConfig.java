@@ -1,4 +1,4 @@
-package com.gunitha.springai.config;
+package com.gunitha.springai.config.basic;
 
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;

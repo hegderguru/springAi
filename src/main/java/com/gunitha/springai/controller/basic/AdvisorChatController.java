@@ -1,9 +1,11 @@
-package com.gunitha.springai.controller;
+package com.gunitha.springai.controller.basic;
 
+import com.gunitha.springai.advisor.TokenUsageAuditAdvisor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.template.st.StTemplateRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,11 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController
-@RequestMapping("prompt-stuffing")
-public class PromptStuffingController {
+@RequestMapping("api/advisor")
+public class AdvisorChatController {
 
+    @Qualifier("grokAdvisorChatClient")
     @Autowired
-    ChatClient chatClient;
+    ChatClient grokAdvisorChatClient;
 
     @Value("classpath:/promptTemplate/spring-versions-template.st")
     Resource springVersionPromptTemplate;
@@ -36,10 +39,12 @@ public class PromptStuffingController {
 
     @GetMapping("chat")
     public String promptStuffing(String message) {
-        return chatClient.prompt()
+        return grokAdvisorChatClient.prompt()
+                .advisors(new TokenUsageAuditAdvisor())
                 .system(springVersionPromptTemplate)
                 .user(promptTemplate.render(Map.of("message", message)))
                 .call().content();
 
     }
+
 }

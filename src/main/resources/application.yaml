@@ -13,7 +13,7 @@ spring:
       api-key: ${GROK-API-KEY}
       chat:
         model: openai/gpt-oss-120b
-        temperature: 1
+        temperature: 0.5
     ollama:
       base-url: http://localhost:11434
       init:

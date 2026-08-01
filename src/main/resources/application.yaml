@@ -10,7 +10,7 @@ spring:
         enabled: false
     openai:
       base-url: https://api.groq.com/openai/v1
-      api-key: {API-KEY}
+      api-key: {GROK-API-KEY}
       chat:
         model: openai/gpt-oss-120b
         temperature: 1

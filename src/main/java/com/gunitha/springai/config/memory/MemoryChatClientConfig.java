@@ -5,6 +5,8 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.memory.MessageWindowChatMemory;
+import org.springframework.ai.chat.memory.repository.jdbc.JdbcChatMemoryRepository;
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.openai.OpenAiChatModel;
@@ -22,6 +24,17 @@ public class MemoryChatClientConfig {
         ChatMemory cleanChatMemory = createCleanChatMemory(chatMemory);
         return ChatClient.builder(openAiChatModel)
                 .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
+                .defaultAdvisors(SimpleLoggerAdvisor.builder().build())
+                .defaultOptions(OpenAiChatOptions.builder()
+                        .temperature(0.8))
+                .build();
+    }
+
+    @Bean
+    public ChatClient grokJdbcMemoryChatClient(OpenAiChatModel openAiChatModel, JdbcChatMemoryRepository jdbcChatMemoryRepository) {
+        MessageWindowChatMemory.Builder builder = MessageWindowChatMemory.builder().chatMemoryRepository(jdbcChatMemoryRepository);
+        return ChatClient.builder(openAiChatModel)
+                .defaultAdvisors(MessageChatMemoryAdvisor.builder(builder.build()).build())
                 .defaultAdvisors(SimpleLoggerAdvisor.builder().build())
                 .defaultOptions(OpenAiChatOptions.builder()
                         .temperature(0.8))

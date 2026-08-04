@@ -32,7 +32,9 @@ public class MemoryChatClientConfig {
 
     @Bean
     public ChatClient grokJdbcMemoryChatClient(OpenAiChatModel openAiChatModel, JdbcChatMemoryRepository jdbcChatMemoryRepository) {
-        MessageWindowChatMemory.Builder builder = MessageWindowChatMemory.builder().chatMemoryRepository(jdbcChatMemoryRepository);
+        MessageWindowChatMemory.Builder builder = MessageWindowChatMemory.builder()
+                .maxMessages(50)
+                .chatMemoryRepository(jdbcChatMemoryRepository);
         return ChatClient.builder(openAiChatModel)
                 .defaultAdvisors(MessageChatMemoryAdvisor.builder(builder.build()).build())
                 .defaultAdvisors(SimpleLoggerAdvisor.builder().build())

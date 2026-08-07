@@ -88,7 +88,7 @@ public class RagController {
         return ResponseEntity.ok(answer);*/
 
         return Mono.fromCallable(() -> {
-            SearchRequest searchRequest = SearchRequest.builder().query(message).topK(3)
+            SearchRequest searchRequest = SearchRequest.builder().query(message).topK(10)
                     .similarityThreshold(0.5)
                     .build();
             List<Document> documents = vectorStore.similaritySearch(searchRequest);

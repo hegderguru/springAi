@@ -19,7 +19,7 @@ public class RagChatClientConfig {
                 .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
                 .defaultAdvisors(SimpleLoggerAdvisor.builder().build())
                 .defaultOptions(OpenAiChatOptions.builder()
-                        .temperature(0.8))
+                        .temperature(1.0))
                 .build();
     }
 

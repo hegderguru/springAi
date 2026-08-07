@@ -1,6 +1,5 @@
-package com.gunitha.springai.rag;
+package com.gunitha.springai.rag.random;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Autowired;

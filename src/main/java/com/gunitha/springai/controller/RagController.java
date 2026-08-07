@@ -30,11 +30,18 @@ public class RagController {
     @Autowired
     private ChatClient openAiRagChatClient;
 
+    @Qualifier("openAiRagAdvisorChatClient")
+    @Autowired
+    private ChatClient openAiRagAdvisorChatClient;
+
     @Autowired
     private VectorStore vectorStore;
 
     @Value("classpath:promptTemplate/systemPromptGovtSchemesTemplate.st")
     Resource systemPromptGovtSchemesTemplate;
+
+    @Value("classpath:promptTemplate/systemPromptPdfTemplate.st")
+    Resource systemPromptPdfTemplate;
 
     @GetMapping("chat")
     public Mono<String> chat(@RequestParam("username") String username, @RequestParam String message) {
@@ -97,6 +104,44 @@ public class RagController {
             return openAiRagChatClient.prompt()
                     .system(promptSystemSpec -> promptSystemSpec.text(systemPromptGovtSchemesTemplate)
                             .param("documents", collect))
+                    .advisors(advisorSpec -> advisorSpec.param(ChatMemory.CONVERSATION_ID, username))
+                    .user(message)
+                    .call()
+                    .content();
+        }).subscribeOn(Schedulers.boundedElastic());
+    }
+
+    @GetMapping("pdf")
+    public Mono<String> pdf(@RequestParam("username") String username, @RequestParam String message) {
+        return Mono.fromCallable(() -> {
+            SearchRequest searchRequest = SearchRequest.builder().query(message).topK(10)
+                    .similarityThreshold(0.5)
+                    .build();
+            List<Document> documents = vectorStore.similaritySearch(searchRequest);
+            String collect = documents.stream().map(Document::getText)
+                    .collect(Collectors.joining(System.lineSeparator()));
+            return openAiRagChatClient.prompt()
+                    .system(promptSystemSpec -> promptSystemSpec.text(systemPromptPdfTemplate)
+                            .param("documents", collect))
+                    .advisors(advisorSpec -> advisorSpec.param(ChatMemory.CONVERSATION_ID, username))
+                    .user(message)
+                    .call()
+                    .content();
+        }).subscribeOn(Schedulers.boundedElastic());
+    }
+
+    @GetMapping("pdfRagAdvisor")
+    public Mono<String> pdfRagAdvisor(@RequestParam("username") String username, @RequestParam String message) {
+        return Mono.fromCallable(() -> {
+            SearchRequest searchRequest = SearchRequest.builder().query(message).topK(10)
+                    .similarityThreshold(0.5)
+                    .build();
+            List<Document> documents = vectorStore.similaritySearch(searchRequest);
+            String collect = documents.stream().map(Document::getText)
+                    .collect(Collectors.joining(System.lineSeparator()));
+            return openAiRagAdvisorChatClient.prompt()/*
+                    .system(promptSystemSpec -> promptSystemSpec.text(systemPromptPdfTemplate)
+                            .param("documents", collect))*/
                     .advisors(advisorSpec -> advisorSpec.param(ChatMemory.CONVERSATION_ID, username))
                     .user(message)
                     .call()

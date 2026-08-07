@@ -9,6 +9,8 @@ import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.chat.memory.repository.jdbc.JdbcChatMemoryRepository;
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.Message;
+import org.springframework.ai.ollama.OllamaChatModel;
+import org.springframework.ai.ollama.api.OllamaChatOptions;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +20,17 @@ import java.util.List;
 
 @Configuration
 public class MemoryChatClientConfig {
+
+    @Bean
+    public ChatClient ollamaMemoryChatClient(OllamaChatModel ollamaChatModel, ChatMemory chatMemory) {
+        ChatMemory cleanChatMemory = createCleanChatMemory(chatMemory);
+        return ChatClient.builder(ollamaChatModel)
+                .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
+                .defaultAdvisors(SimpleLoggerAdvisor.builder().build())
+                .defaultOptions(OllamaChatOptions.builder()
+                        .temperature(0.8))
+                .build();
+    }
 
     @Bean
     public ChatClient grokMemoryChatClient(OpenAiChatModel openAiChatModel, ChatMemory chatMemory) {

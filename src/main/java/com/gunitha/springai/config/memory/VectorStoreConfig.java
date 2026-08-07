@@ -1,0 +1,30 @@
+package com.gunitha.springai.config.memory;
+
+import org.springframework.ai.embedding.EmbeddingModel;
+import org.springframework.ai.vectorstore.pgvector.PgVectorStore;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import org.springframework.ai.vectorstore.pgvector.PgVectorStore.PgDistanceType;
+import org.springframework.ai.vectorstore.pgvector.PgVectorStore.PgIndexType;
+
+@Configuration
+public class VectorStoreConfig {
+
+    @Bean
+    public PgVectorStore vectorStore(
+            JdbcTemplate jdbcTemplate,
+            @Qualifier("ollamaEmbeddingModel") EmbeddingModel embeddingModel) {
+
+        return PgVectorStore.builder(jdbcTemplate, embeddingModel)
+                .dimensions(1024) // Change this to exactly 1024 to match your Ollama model
+                .distanceType(PgDistanceType.COSINE_DISTANCE)
+                .indexType(PgIndexType.HNSW)
+                .initializeSchema(true) // This will create the table only if it does not exist
+                .build();
+    }
+
+}
+

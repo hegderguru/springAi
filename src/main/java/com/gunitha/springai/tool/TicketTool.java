@@ -22,6 +22,7 @@ public class TicketTool {
     , ToolContext toolContext) {
         String username = (String) toolContext.getContext().get("username");
         ticketService.create(username,ticketRequest);
+        //throw new RuntimeException("Not Implemented");
         return "Ticket # : "+toolContext.toString();
     }
 

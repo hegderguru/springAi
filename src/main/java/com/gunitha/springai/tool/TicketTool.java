@@ -25,7 +25,7 @@ public class TicketTool {
         return "Ticket # : "+toolContext.toString();
     }
 
-    @Tool(name = "tickets", description = "fetch the tickets on username")
+    @Tool(name = "tickets", description = "fetch the tickets on username", returnDirect = true)
     public List<Ticket> tickets(ToolContext toolContext) {
         return ticketService.findByUserName((String) toolContext.getContext().get("username"));
     }

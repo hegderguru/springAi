@@ -5,17 +5,24 @@ import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class ChatClientConfig {
-
+/*
     @Primary
     @Bean
     public ChatClient grokChatClient(OpenAiChatModel openAiChatModel) {
         return ChatClient.create(openAiChatModel);
+    }*/
+
+    @Primary
+    @Bean
+    public ChatClient grokChatClient(@Qualifier("openAiChatClientBuilder") ChatClient.Builder openAiChatClientBuilder) {
+        return openAiChatClientBuilder.build();
     }
 
     @Bean

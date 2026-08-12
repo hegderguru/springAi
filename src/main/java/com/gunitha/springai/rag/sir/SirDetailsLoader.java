@@ -26,7 +26,7 @@ public class SirDetailsLoader {
     public void init() {
         TikaDocumentReader tikaDocumentReader = new TikaDocumentReader(resource);
         List<Document> documents = tikaDocumentReader.get();
-        TextSplitter textSplitter = TokenTextSplitter.builder().withChunkSize(100).withMaxNumChunks(500).build();
+        TextSplitter textSplitter = TokenTextSplitter.builder().withChunkSize(200).withMaxNumChunks(1000).build();
         vectorStore.add(textSplitter.split(documents));
     }
 

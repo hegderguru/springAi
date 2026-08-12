@@ -141,7 +141,7 @@ public class RagController {
             return openAiRagAdvisorChatClient.prompt()/*
                     .system(promptSystemSpec -> promptSystemSpec.text(systemPromptPdfTemplate)
                             .param("documents", collect))*/
-                    .advisors(advisorSpec -> advisorSpec.param(ChatMemory.CONVERSATION_ID, username))
+                    //.advisors(advisorSpec -> advisorSpec.param(ChatMemory.CONVERSATION_ID, username))
                     .user(message)
                     .call()
                     .content();

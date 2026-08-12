@@ -9,6 +9,7 @@ import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.ai.rag.advisor.RetrievalAugmentationAdvisor;
+import org.springframework.ai.rag.preretrieval.query.transformation.TranslationQueryTransformer;
 import org.springframework.ai.rag.retrieval.search.VectorStoreDocumentRetriever;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,10 +45,15 @@ public class RagChatClientConfig {
     }
 
     @Bean
-    public RetrievalAugmentationAdvisor retrievalAugmentationAdvisor(ChatClient chatClient) {
+    public RetrievalAugmentationAdvisor retrievalAugmentationAdvisor(ChatClient chatClient,OpenAiChatModel openAiChatModel) {
+        ChatClient.Builder chatClientBuilder = ChatClient.builder(openAiChatModel);
         return RetrievalAugmentationAdvisor.builder()
+                .queryTransformers(TranslationQueryTransformer.builder()
+                        .chatClientBuilder(chatClientBuilder.clone())
+                        .targetLanguage("english")
+                        .build())
                 .documentRetriever(VectorStoreDocumentRetriever.builder().vectorStore(vectorStore)
-                        .topK(3).similarityThreshold(0.5).build()).build();
+                        .topK(10).similarityThreshold(0.5).build()).build();
     }
 
 }
